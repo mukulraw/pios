@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ratna.foosip">
+
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.CAMERA"></uses-permission>
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".FoosipChat"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".SplashScreen"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".SignIn"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".EmailSignUp"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".MobileSignUp"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".OTP"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".SetPassword"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".EmailOTP"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".Home"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".History"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".Profile"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ReferApp"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".AboutUs"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".Feedback"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"></activity>
+        <activity
+            android:name=".ScanQR"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".Welcome"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".MenuItem"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".OrderScreen"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".OrderSummary"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".AskMore"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".CheckOut"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".CheckOutSuccess"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".LookForTable"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"></activity>
+        <activity
+            android:name=".PutInQueue"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".HistoryDetails"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".MenuManagement"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ProfileEdit"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".GPS"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ChangePassword"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ForgotPassword"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".UsersActivity"
+            android:screenOrientation="portrait"></activity>
+
+
+        <activity
+            android:name=".HomeChat"
+            android:screenOrientation="portrait"></activity>
+
+
+        <activity
+            android:name=".ProfileActivity"
+            android:screenOrientation="portrait"></activity>
+
+
+        <activity
+            android:name=".ChatActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".SettingsActivity"
+            android:screenOrientation="portrait"></activity>
+
+
+        <activity android:name=".StatusActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".AllUsersActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+
+
+
+
+
+
+        <!-- Firebase Notifications -->
+        <service android:name=".MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name=".MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- ./Firebase Notifications -->
+
+
+        <!--<service android:name=".FirebaseMessagingService">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.firebase.MESSAGING_EVENT" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
+
+
+    </application>
+
+</manifest>
