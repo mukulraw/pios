@@ -24,11 +24,11 @@ class SectionsPagerAdapter extends FragmentPagerAdapter{
                 return requestsFragment;
 
             case 1:
-                ChatsFragment chatsFragment = new ChatsFragment();
+                UsersFragment chatsFragment = new UsersFragment();
                 return  chatsFragment;
 
             case 2:
-                FriendsFragment friendsFragment = new FriendsFragment();
+                GroupFragment friendsFragment = new GroupFragment();
                 return friendsFragment;
 
             case 3:

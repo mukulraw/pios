@@ -31,7 +31,7 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/ivUserChat">
 
-    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+    <TextView
         android:id="@+id/txtMessage"
         android:textColor="@color/black"
         android:layout_width="wrap_content"

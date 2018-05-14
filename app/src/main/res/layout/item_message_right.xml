@@ -24,7 +24,7 @@
         android:layout_toStartOf="@+id/ivUserChat"
         android:id="@+id/contentMessageChat"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:cmv_arrowGravity="end"
         app:cmv_arrowMargin="3dp"
         app:cmv_arrowPosition="right"
@@ -35,7 +35,7 @@
         app:cmv_showArrow="true"
        >
 
-    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+    <TextView
         android:textColor="@color/black"
         android:textIsSelectable="true"
         android:text="Alessandr sdlsdklsd \n slkdlskdlks \nsdlkslkds dsdso"
@@ -44,6 +44,7 @@
         android:layout_height="wrap_content"
         emojicon:emojiconSize="28sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
 
     </me.himanshusoni.chatmessageview.ChatMessageView>
 

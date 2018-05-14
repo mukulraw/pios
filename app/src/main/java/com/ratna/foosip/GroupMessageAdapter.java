@@ -148,7 +148,7 @@ public class GroupMessageAdapter extends FirebaseRecyclerAdapter<Messages ,Group
     public class MessageViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvTimestamp,tvLocation;
-        EmojiconTextView txtMessage;
+        TextView txtMessage;
         ImageView ivChatPhoto;
         CircleImageView ivUser;
 
@@ -156,7 +156,7 @@ public class GroupMessageAdapter extends FirebaseRecyclerAdapter<Messages ,Group
             super(view);
 
             tvTimestamp = (TextView)itemView.findViewById(R.id.timestamp);
-            txtMessage = (EmojiconTextView)itemView.findViewById(R.id.txtMessage);
+            txtMessage = (TextView)itemView.findViewById(R.id.txtMessage);
             tvLocation = (TextView)itemView.findViewById(R.id.tvLocation);
             ivChatPhoto = (ImageView)itemView.findViewById(R.id.img_chat);
             ivUser = (CircleImageView)itemView.findViewById(R.id.ivUserChat);
