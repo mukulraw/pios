@@ -142,21 +142,21 @@ public class SavedParameter {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(MOBILE, mobile);
-        editor.commit();
+        editor.apply();
     }
 
     public void setOTP(String password) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(OTP, password);
-        editor.commit();
+        editor.apply();
     }
 
     public void setrId(String rId) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(RID, rId);
-        editor.commit();
+        editor.apply();
     }
 
 
@@ -165,22 +165,31 @@ public class SavedParameter {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(TOKEN, token);
-        editor.commit();
+        editor.apply();
     }
 
+    public String getTOKEN() {
+        SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
+        return sharedpreferences.getString(TOKEN , "");
+    }
 
     public void setUID(String uid) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(UID, uid);
-        editor.commit();
+        editor.apply();
+    }
+
+    public String getUID() {
+        SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
+        return sharedpreferences.getString(UID , "");
     }
 
     public void setQUEUE(Boolean queue) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putBoolean(QUEUE, queue);
-        editor.commit();
+        editor.apply();
     }
 
 
@@ -189,28 +198,28 @@ public class SavedParameter {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(FIRST_NAME, firstName);
-        editor.commit();
+        editor.apply();
     }
 
     public void setEMAIL(String email) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(EMAIL, email);
-        editor.commit();
+        editor.apply();
     }
 
     public void setSaveApi(String key,String api) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(key, api);
-        editor.commit();
+        editor.apply();
     }
 
     public void setTempOrderId(String tempOrderId) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(TEMP_ORDER_ID, tempOrderId);
-        editor.commit();
+        editor.apply();
     }
 
     public void setMenueventObj(MenuEvent menueventObj) {
@@ -219,7 +228,7 @@ public class SavedParameter {
         Gson gson = new Gson();
         String json = gson.toJson(menueventObj);
         editor.putString(MENUEVENT_OBJ, json);
-        editor.commit();
+        editor.apply();
     }
 
     public void setTaxObj(Tax taxObj) {
@@ -228,35 +237,35 @@ public class SavedParameter {
         Gson gson = new Gson();
         String json = gson.toJson(taxObj);
         editor.putString(TAX_OBJ, json);
-        editor.commit();
+        editor.apply();
     }
 
     public void setSubUser(boolean sub_user) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putBoolean(SUB_USER, sub_user);
-        editor.commit();
+        editor.apply();
     }
 
     public void setMain_user(boolean main_user) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putBoolean(MAIN_USER, main_user);
-        editor.commit();
+        editor.apply();
     }
 
     public void setQrCode(String qrCode) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(QR_CODE, qrCode);
-        editor.commit();
+        editor.apply();
     }
 
     public void setUSERNAME(String username) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(USERNAME, username);
-        editor.commit();
+        editor.apply();
     }
 
 
@@ -264,7 +273,7 @@ public class SavedParameter {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(PASSWORD, password);
-        editor.commit();
+        editor.apply();
     }
 
 

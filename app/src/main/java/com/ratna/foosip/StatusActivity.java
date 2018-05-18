@@ -1,6 +1,7 @@
 package com.ratna.foosip;
 
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -16,6 +18,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.ratna.foosip.profilePOJO.profileBean;
+import com.ratna.foosip.profilePOJO.statusRequestBean;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import SharedPreferences.SavedParameter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class StatusActivity extends AppCompatActivity {
 
@@ -25,13 +40,12 @@ public class StatusActivity extends AppCompatActivity {
     private Button mSavebtn;
 
 
-    //Firebase
-    private DatabaseReference mStatusDatabase;
-    private FirebaseUser mCurrentUser;
 
+    ProgressBar progress;
+    private SavedParameter savedParameter;
 
     //Progress
-    private ProgressDialog mProgress;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +53,14 @@ public class StatusActivity extends AppCompatActivity {
         setContentView(R.layout.activity_status);
 
         //Firebase
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String current_uid = mCurrentUser.getUid();
-
-        mStatusDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        savedParameter = new SavedParameter(StatusActivity.this);
 
         mToolbar = (Toolbar) findViewById(R.id.status_appBar);
+        progress = (ProgressBar)findViewById(R.id.progress);
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Account Status");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         String status_value = getIntent().getStringExtra("status_value");
 
@@ -62,29 +74,55 @@ public class StatusActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //Progress
-                mProgress = new ProgressDialog(StatusActivity.this);
-                mProgress.setTitle("Saving Changes");
-                mProgress.setMessage("Please wait while we save the changes");
-                mProgress.show();
 
                 String status = mStatus.getEditText().getText().toString();
 
-                mStatusDatabase.child("status").setValue(status).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                progress.setVisibility(View.VISIBLE);
+
+                final Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://foosip.com/")
+                        .addConverterFactory(ScalarsConverterFactory.create())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                final AllAPIs cr = retrofit.create(AllAPIs.class);
+
+                statusRequestBean body = new statusRequestBean();
+
+                body.setId(savedParameter.getUID());
+                body.setProfilePic(status);
+
+                Map<String, String> map = new HashMap<>();
+
+                map.put("Content-Type" , "application/json");
+                map.put("Authorization" , SavedParameter.getTOKEN(StatusActivity.this));
+
+                Call<profileBean> call = cr.updateStatus(body , map);
+
+
+                call.enqueue(new Callback<profileBean>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public void onResponse(Call<profileBean> call, Response<profileBean> response) {
 
-                        if(task.isSuccessful()){
 
-                            mProgress.dismiss();
+                        //if (response.body().getMessage().equals("1"))
+                        //{
+                            progress.setVisibility(View.GONE);
+                            Toast.makeText(StatusActivity.this , "Status updated successfully" , Toast.LENGTH_SHORT).show();
+                            finish();
+                        //}
 
-                        } else {
-
-                            Toast.makeText(getApplicationContext(), "There was some error in saving Changes.", Toast.LENGTH_LONG).show();
-
-                        }
 
                     }
+
+                    @Override
+                    public void onFailure(Call<profileBean> call, Throwable t) {
+                            progress.setVisibility(View.GONE);
+                    }
                 });
+
+
 
             }
         });

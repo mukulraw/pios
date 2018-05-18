@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.ratna.foosip.profilePOJO.picRequestBean;
+import com.ratna.foosip.profilePOJO.profileBean;
+import com.ratna.foosip.profilePOJO.profileRequestBean;
+import com.ratna.foosip.profilePOJO.profileUpdateBean;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -51,6 +58,11 @@ import SharedPreferences.SavedParameter;
 import SharedPreferences.UserSession;
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static android.R.attr.format;
 import static android.app.Activity.RESULT_OK;
@@ -75,7 +87,7 @@ public class RequestsFragment extends Fragment {
     private Button mStatusBtn;
     private Button mImageBtn;
 
-    private EditText ed_interest,ed_first_name,ed_last_name;
+    private TextView ed_interest,ed_first_name,ed_last_name;
 
     private TextView txt_email,txt_user_name;
 
@@ -85,11 +97,11 @@ public class RequestsFragment extends Fragment {
     // Storage Firebase
     private StorageReference mImageStorage;
 
-    private ProgressDialog mProgressDialog;
-
     private SavedParameter savedParameter;
 
     String base_64;
+
+    ProgressBar progress;
 
     UserSession userSession;
 
@@ -106,6 +118,8 @@ public class RequestsFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_requests , container , false);
+
+        progress = view.findViewById(R.id.progress);
 
         savedParameter = new SavedParameter(getContext());
         userSession = new UserSession(getContext());
@@ -124,9 +138,9 @@ public class RequestsFragment extends Fragment {
         mStatusBtn = (Button) view.findViewById(R.id.settings_status_btn);
         mImageBtn = (Button) view.findViewById(R.id.settings_image_btn);
 
-        ed_interest = (EditText)view.findViewById(R.id.ed_interest);
-        ed_first_name = (EditText)view.findViewById(R.id.ed_first_name);
-        ed_last_name = (EditText)view.findViewById(R.id.ed_last_name);
+        ed_interest = (TextView)view.findViewById(R.id.ed_interest);
+        ed_first_name = (TextView)view.findViewById(R.id.ed_first_name);
+        ed_last_name = (TextView)view.findViewById(R.id.ed_last_name);
 
         txt_email = (TextView) view.findViewById(R.id.txt_email);
         txt_user_name = (TextView) view.findViewById(R.id.txt_user_name);
@@ -185,6 +199,8 @@ public class RequestsFragment extends Fragment {
         });
 
 
+
+
         mStatusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -223,32 +239,80 @@ public class RequestsFragment extends Fragment {
         return view;
     }
 
-    /*@Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        try {
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//            String dateInString = "22/01/2015";
-//            Date date = sdf.parse(dateInString);
-//
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTime(date);
-//            calendar.add(Calendar.YEAR, 1);
-//            String  nextYear = sdf.format(calendar.getTime());
-//
-//            Log.i("Date_set",nextYear.toString());
-//
-////
-////            Date date2 = sdf.parse(nextYear.toString());
-//
-//            Toast.makeText(getActivity(),nextYear,Toast.LENGTH_LONG).show();
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        loadData();
+
+    }
+
+    public void loadData()
+    {
+
+        progress.setVisibility(View.VISIBLE);
+
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://foosip.com/")
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        final AllAPIs cr = retrofit.create(AllAPIs.class);
+
+        profileRequestBean body = new profileRequestBean();
+
+        body.setId(savedParameter.getUID());
+
+        Map<String, String> map = new HashMap<>();
+
+        map.put("Content-Type" , "application/json");
+        map.put("Authorization" , SavedParameter.getTOKEN(getContext()));
+
+        Call<profileBean> call = cr.getProfile(body , map);
 
 
-        } catch (Exception e) {
+        call.enqueue(new retrofit2.Callback<profileBean>() {
+            @Override
+            public void onResponse(Call<profileBean> call, Response<profileBean> response) {
 
-        }
 
-    }*/
+                mName.setText(response.body().getData().getFirstName() + " " + response.body().getData().getLastName());
+                mStatus.setText(response.body().getData().getStatus());
+
+                txt_email.setText(response.body().getData().getEmail());
+                txt_user_name.setText(response.body().getData().getName());
+
+                ed_first_name.setText(response.body().getData().getFirstName());
+                ed_last_name.setText(response.body().getData().getLastName());
+
+                ed_interest.setText(response.body().getData().getInterest());
+
+                if (response.body().getData().getProfilePic().length() > 0)
+                {
+
+                    DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
+                    ImageLoader loader = ImageLoader.getInstance();
+                    loader.displayImage("http://foosip.com/" + response.body().getData().getProfilePic() , mDisplayImage , options);
+
+                }
+
+
+                progress.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onFailure(Call<profileBean> call, Throwable t) {
+                progress.setVisibility(View.GONE);
+            }
+        });
+
+
+    }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -275,11 +339,6 @@ public class RequestsFragment extends Fragment {
             if (resultCode == RESULT_OK) {
 
 
-                mProgressDialog = new ProgressDialog(getContext());
-                mProgressDialog.setTitle("Uploading Image...");
-                mProgressDialog.setMessage("Please wait while we upload and process the image.");
-                mProgressDialog.setCanceledOnTouchOutside(false);
-                mProgressDialog.show();
 
 
                 Uri resultUri = result.getUri();
@@ -301,8 +360,46 @@ public class RequestsFragment extends Fragment {
 
                 base_64 = Base64.encodeToString(thumb_byte, Base64.DEFAULT);
 
+                progress.setVisibility(View.VISIBLE);
 
-                StorageReference filepath = mImageStorage.child("profile_images").child(current_user_id + ".jpg");
+                final Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("http://foosip.com/")
+                        .addConverterFactory(ScalarsConverterFactory.create())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                final AllAPIs cr = retrofit.create(AllAPIs.class);
+
+                picRequestBean body = new picRequestBean();
+
+                body.setId(savedParameter.getUID());
+                body.setProfilePic(base_64);
+
+                Map<String, String> map = new HashMap<>();
+
+                map.put("Content-Type" , "application/json");
+                map.put("Authorization" , SavedParameter.getTOKEN(getContext()));
+
+                Call<profileBean> call = cr.updatePic(body , map);
+
+                call.enqueue(new retrofit2.Callback<profileBean>() {
+                    @Override
+                    public void onResponse(Call<profileBean> call, Response<profileBean> response) {
+
+                        progress.setVisibility(View.GONE);
+                        loadData();
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<profileBean> call, Throwable t) {
+
+                        progress.setVisibility(View.GONE);
+                    }
+                });
+
+
+                /*StorageReference filepath = mImageStorage.child("profile_images").child(current_user_id + ".jpg");
                 final StorageReference thumb_filepath = mImageStorage.child("profile_images").child("thumbs").child(current_user_id + ".jpg");
 
 
@@ -364,7 +461,7 @@ public class RequestsFragment extends Fragment {
                         }
 
                     }
-                });
+                });*/
 
 
 
@@ -395,9 +492,50 @@ public class RequestsFragment extends Fragment {
                 {
                     if(!ed_last_name.getText().toString().equals("") && !ed_last_name.getText().toString().equals(null))
                     {
-                        new ProfileEditCall(getActivity(), savedParameter.getEMAIL(getContext()),
-                                savedParameter.getUSERNAME(getContext()),ed_interest.getText().toString(),
-                                ed_first_name.getText().toString(),ed_last_name.getText().toString(),base_64 );
+                        progress.setVisibility(View.VISIBLE);
+
+                        final Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl("http://foosip.com/")
+                                .addConverterFactory(ScalarsConverterFactory.create())
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+
+                        final AllAPIs cr = retrofit.create(AllAPIs.class);
+
+                        profileUpdateBean body = new profileUpdateBean();
+
+                        body.setId(savedParameter.getUID());
+                        body.setFirstName(ed_first_name.getText().toString());
+                        body.setInterest(ed_interest.getText().toString());
+                        body.setLastName(ed_last_name.getText().toString());
+
+                        Map<String, String> map = new HashMap<>();
+
+                        map.put("Content-Type" , "application/json");
+                        map.put("Authorization" , SavedParameter.getTOKEN(getContext()));
+
+                        Call<profileBean> call = cr.updateProfile(body , map);
+
+
+                        call.enqueue(new retrofit2.Callback<profileBean>() {
+                            @Override
+                            public void onResponse(Call<profileBean> call, Response<profileBean> response) {
+
+                                /*userSession.setPROFILE(true);
+                                Toast.makeText(SettingsActivity.this, "Updated", Toast.LENGTH_SHORT).show();
+                                Intent mainIntent = new Intent(SettingsActivity.this, ScanQR.class);
+                                mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(mainIntent);
+                                finish();
+
+                                progress.setVisibility(View.GONE);*/
+                            }
+
+                            @Override
+                            public void onFailure(Call<profileBean> call, Throwable t) {
+                                progress.setVisibility(View.GONE);
+                            }
+                        });
 
                     }else{
 

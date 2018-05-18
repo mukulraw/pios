@@ -26,7 +26,8 @@ import okhttp3.Response;
  * Created by ratna on 4/9/2018.
  */
 
-public class ProfileEditCall { Activity activity;
+public class ProfileEditCall {
+    Activity activity;
     SavedParameter savedParameter;
     private String email,name,interest,first_name,last_name,profile_pic;
 

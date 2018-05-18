@@ -32,7 +32,7 @@ class SectionsPagerAdapter extends FragmentPagerAdapter{
                 return friendsFragment;
 
             case 3:
-                GroupFragment groupFragment = new GroupFragment();
+                Wall groupFragment = new Wall();
                 return groupFragment;
 
             default:

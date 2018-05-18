@@ -21,9 +21,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import Utils.NotificationUtils;
+import app.Config;
 
 /**
  * Created by ratna on 2/7/2017.
@@ -34,13 +36,62 @@ public class SplashScreen extends AppCompatActivity {
     private static final String TAG = Home.class.getSimpleName();
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
-
+    SharedPreferences fcmPref;
+    SharedPreferences.Editor fcmEdit;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
-       checkPermission();
+       //checkPermission();
+
+        fcmPref = getSharedPreferences(Config.SHARED_PREF , Context.MODE_PRIVATE);
+        fcmEdit = fcmPref.edit();
+
+       if (checkPermission())
+       {
+
+
+
+
+           try {
+
+               String tok = FirebaseInstanceId.getInstance().getToken();
+
+               Log.d("token", tok);
+
+               fcmEdit.putString("token" , tok);
+
+               fcmEdit.apply();
+
+               displayFirebaseRegId();
+
+           } catch (Exception e) {
+
+               new Thread() {
+                   @Override
+                   public void run() {
+                       //If there are stories, add them to the table
+                       //try {
+                       // code runs in a thread
+                       //runOnUiThread(new Runnable() {
+                       //  @Override
+                       //public void run() {
+                       new MyFirebaseInstanceIDService().onTokenRefresh();
+                       //}
+                       //});
+                       //} catch (final Exception ignored) {
+                       //}
+                   }
+               }.start();
+
+               e.printStackTrace();
+           }
+
+       }
+
+
+
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -49,25 +100,17 @@ public class SplashScreen extends AppCompatActivity {
                 if (intent.getAction().equals(app.Config.REGISTRATION_COMPLETE)) {
                     // gcm successfully registered
                     // now subscribe to `global` topic to receive app wide notifications
-                    FirebaseMessaging.getInstance().subscribeToTopic(app.Config.TOPIC_GLOBAL);
+                    //FirebaseMessaging.getInstance().subscribeToTopic(app.Config.TOPIC_GLOBAL);
 
                     displayFirebaseRegId();
 
-                } else if (intent.getAction().equals(app.Config.PUSH_NOTIFICATION)) {
-                    // new push notification is received
-
-                    String message = intent.getStringExtra("message");
-
-//                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
-//                    Intent intent1 = new Intent(SplashScreen.this,Order.class);
-//                    startActivity(intent1);
                 }
 
 
             }
         };
 
-        displayFirebaseRegId();
+        //displayFirebaseRegId();
 
 
     }
@@ -75,8 +118,8 @@ public class SplashScreen extends AppCompatActivity {
     // Fetches reg id from shared preferences
     // and displays on the screen
     private void displayFirebaseRegId() {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(app.Config.SHARED_PREF, 0);
-        String regId = pref.getString("regId", null);
+        //SharedPreferences pref = getApplicationContext().getSharedPreferences(app.Config.SHARED_PREF, 0);
+        String regId = fcmPref.getString("token", null);
 
         Log.e(TAG, "Firebase reg id: " + regId);
 

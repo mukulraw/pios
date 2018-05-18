@@ -2,6 +2,11 @@ package com.ratna.foosip;
 
 import com.ratna.foosip.allUsersPOJO.allUsersBean;
 import com.ratna.foosip.allUsersPOJO.allUsersRequestBean;
+import com.ratna.foosip.profilePOJO.picRequestBean;
+import com.ratna.foosip.profilePOJO.profileBean;
+import com.ratna.foosip.profilePOJO.profileRequestBean;
+import com.ratna.foosip.profilePOJO.profileUpdateBean;
+import com.ratna.foosip.profilePOJO.statusRequestBean;
 
 import java.util.Map;
 
@@ -24,5 +29,24 @@ public interface AllAPIs {
             );
 
 
+    @POST("usersapi/profile")
+    Call<profileBean> getProfile(
+            @Body profileRequestBean body , @HeaderMap Map<String , String> map
+    );
+
+    @POST("usersapi/editprofile")
+    Call<profileBean> updatePic(
+            @Body picRequestBean body , @HeaderMap Map<String , String> map
+    );
+
+    @POST("usersapi/editprofile")
+    Call<profileBean> updateStatus(
+            @Body statusRequestBean body , @HeaderMap Map<String , String> map
+    );
+
+    @POST("usersapi/editprofile")
+    Call<profileBean> updateProfile(
+            @Body profileUpdateBean body , @HeaderMap Map<String , String> map
+    );
 
 }

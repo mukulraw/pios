@@ -297,22 +297,38 @@ public class SignIn extends Activity {
 //                    Toast.makeText(Home.this, result, Toast.LENGTH_LONG).show();
                     Log.i("MY INFO", "Json Parser started..");
                     JSONObject jsonObject = new JSONObject(result);
-                    String mssg = jsonObject.getString("token");
-                    String uid = jsonObject.getString("uid");
 
-                    if (!mssg.equals("")) {
-                        userSession.setUserLogIn(true);
-                        savedParameter.setTOKEN("Bearer " + mssg);
-                        savedParameter.setUID(uid);
+                    String status = jsonObject.getString("status");
 
-                        loginUser(email, pass);
+                    if (status.equals("1"))
+                    {
+                        String mssg = jsonObject.getString("token");
+                        String uid = jsonObject.getString("uid");
+
+
+
+                        if (!mssg.equals("")) {
+                            userSession.setUserLogIn(true);
+                            savedParameter.setTOKEN("Bearer " + mssg);
+                            savedParameter.setUID(uid);
+
+                            Log.d("Bearer" , "Bearer " + mssg);
+
+                            loginUser(email, pass);
 
 //                        Intent intent = new Intent(SignIn.this, Home.class);
 //                        startActivity(intent);
 //                        finishAffinity();
 
 
+                        }
                     }
+                    else
+                    {
+                        Toast.makeText(SignIn.this , "Invalid Login or User doesn't exist" , Toast.LENGTH_SHORT).show();
+                    }
+
+
 
 
                 } catch (Exception e) {

@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:25359951218:android:3372202bcc019468",
+        "mobilesdk_app_id": "1:25359951218:android:52ae04fd11c22ac6",
         "android_client_info": {
-          "package_name": "com.ratna.foosip_hm"
+          "package_name": "com.ratna.foosip"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "25359951218-eriam8l0445ero2jlktlueod86ndcebu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ratna.foosip",
+            "certificate_hash": "956d027f940ef5441b3f1b4f122d6154fa1fda08"
+          }
+        },
         {
           "client_id": "25359951218-mpi58hl9kth1eln57sfolsfmlf5duc78.apps.googleusercontent.com",
           "client_type": 3
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "25359951218-mpi58hl9kth1eln57sfolsfmlf5duc78.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
@@ -39,9 +52,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:25359951218:android:52ae04fd11c22ac6",
+        "mobilesdk_app_id": "1:25359951218:android:3372202bcc019468",
         "android_client_info": {
-          "package_name": "com.ratna.foosip"
+          "package_name": "com.ratna.foosip_hm"
         }
       },
       "oauth_client": [
