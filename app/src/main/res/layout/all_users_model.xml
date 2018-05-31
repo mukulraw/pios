@@ -7,12 +7,12 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/view"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginBottom="16dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="1"
 
         app:civ_border_color="#cdcdcd"
@@ -29,8 +29,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Angel Priya"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/textView28"
         app:layout_constraintStart_toEndOf="@+id/view"
@@ -45,6 +43,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="Lonely..."
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintStart_toEndOf="@+id/view"
         app:layout_constraintTop_toBottomOf="@+id/textView18" />
@@ -68,6 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:text="Age 23"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/textView18"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textView18" />

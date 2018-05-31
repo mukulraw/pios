@@ -79,7 +79,7 @@ public class UpdateItem {
 
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .header("Authorization", savedParameter.getTOKEN(activity))
+                .header("Authorization", savedParameter.getTOKEN())
                 .url(url)
                 .post(body)
                 .build();

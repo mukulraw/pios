@@ -95,7 +95,7 @@ public class MobileSignUp extends Activity {
 
         try {
             SharedPreferences pref = getApplicationContext().getSharedPreferences(app.Config.SHARED_PREF, 0);
-            String regId = pref.getString("regId", null);
+            String regId = pref.getString("token", null);
             GetUserProfile getUserProfile = new GetUserProfile(this);
             jsonObject.put("email",savedParameter.getEMAIL(this));
             jsonObject.put("mobile", mobile);

@@ -88,12 +88,12 @@ public class UsersFragment extends Fragment {
 
         allUsersRequestBean body = new allUsersRequestBean();
 
-        body.setRid(savedParameter.getQrCode(getContext()));
+        body.setRid(savedParameter.getQrCode());
 
         Map<String, String> map = new HashMap<>();
 
         map.put("Content-Type" , "application/json");
-        map.put("Authorization" , savedParameter.getTOKEN(getContext()));
+        map.put("Authorization" , savedParameter.getTOKEN());
 
         Call<allUsersBean> call = cr.getAllUsers(body , map);
 

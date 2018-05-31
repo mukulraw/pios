@@ -214,7 +214,7 @@ public class SettingsActivity extends AppCompatActivity {
         Map<String, String> map = new HashMap<>();
 
         map.put("Content-Type" , "application/json");
-        map.put("Authorization" , SavedParameter.getTOKEN(SettingsActivity.this));
+        map.put("Authorization" , savedParameter.getTOKEN());
 
         Call<profileBean> call = cr.getProfile(body , map);
 
@@ -241,6 +241,8 @@ public class SettingsActivity extends AppCompatActivity {
                     DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
                     ImageLoader loader = ImageLoader.getInstance();
                     loader.displayImage("http://foosip.com/" + response.body().getData().getProfilePic() , mDisplayImage , options);
+
+                    Log.d("iimmaaggee" , response.body().getData().getProfilePic());
 
                 }
 
@@ -328,7 +330,7 @@ public class SettingsActivity extends AppCompatActivity {
                 Map<String, String> map = new HashMap<>();
 
                 map.put("Content-Type" , "application/json");
-                map.put("Authorization" , SavedParameter.getTOKEN(SettingsActivity.this));
+                map.put("Authorization" , savedParameter.getTOKEN());
 
                 Call<profileBean> call = cr.updatePic(body , map);
 
@@ -396,7 +398,7 @@ public class SettingsActivity extends AppCompatActivity {
                         Map<String, String> map = new HashMap<>();
 
                         map.put("Content-Type" , "application/json");
-                        map.put("Authorization" , SavedParameter.getTOKEN(SettingsActivity.this));
+                        map.put("Authorization" , savedParameter.getTOKEN());
 
                         Call<profileBean> call = cr.updateProfile(body , map);
 

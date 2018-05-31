@@ -96,11 +96,16 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
 
+
+                Log.d("intent" , "1");
+
                 // checking for type intent filter
-                if (intent.getAction().equals(app.Config.REGISTRATION_COMPLETE)) {
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
                     // gcm successfully registered
                     // now subscribe to `global` topic to receive app wide notifications
                     //FirebaseMessaging.getInstance().subscribeToTopic(app.Config.TOPIC_GLOBAL);
+
+                    Log.d("intent" , "2");
 
                     displayFirebaseRegId();
 
@@ -111,6 +116,9 @@ public class SplashScreen extends AppCompatActivity {
         };
 
         //displayFirebaseRegId();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.REGISTRATION_COMPLETE));
 
 
     }
@@ -141,13 +149,10 @@ public class SplashScreen extends AppCompatActivity {
         super.onResume();
 
         // register GCM registration complete receiver
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(app.Config.REGISTRATION_COMPLETE));
+
 
         // register new push message receiver
         // by doing this, the activity will be notified each time a new message arrives
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
-                new IntentFilter(app.Config.PUSH_NOTIFICATION));
 
         // clear the notification area when the app is opened
         NotificationUtils.clearNotifications(getApplicationContext());
@@ -155,8 +160,8 @@ public class SplashScreen extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
     }
 
 
@@ -205,18 +210,42 @@ public class SplashScreen extends AppCompatActivity {
                             if (intent.getAction().equals(app.Config.REGISTRATION_COMPLETE)) {
                                 // gcm successfully registered
                                 // now subscribe to `global` topic to receive app wide notifications
-                                FirebaseMessaging.getInstance().subscribeToTopic(app.Config.TOPIC_GLOBAL);
+                                //FirebaseMessaging.getInstance().subscribeToTopic(app.Config.TOPIC_GLOBAL);
 
-                                displayFirebaseRegId();
+                                try {
 
-                            } else if (intent.getAction().equals(app.Config.PUSH_NOTIFICATION)) {
-                                // new push notification is received
+                                    String tok = FirebaseInstanceId.getInstance().getToken();
 
-                                String message = intent.getStringExtra("message");
+                                    Log.d("token", tok);
 
-//                                Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
-//                                Intent intent1 = new Intent(SplashScreen.this,Order.class);
-//                                startActivity(intent1);
+                                    fcmEdit.putString("token" , tok);
+
+                                    fcmEdit.apply();
+
+                                    displayFirebaseRegId();
+
+                                } catch (Exception e) {
+
+                                    new Thread() {
+                                        @Override
+                                        public void run() {
+                                            //If there are stories, add them to the table
+                                            //try {
+                                            // code runs in a thread
+                                            //runOnUiThread(new Runnable() {
+                                            //  @Override
+                                            //public void run() {
+                                            new MyFirebaseInstanceIDService().onTokenRefresh();
+                                            //}
+                                            //});
+                                            //} catch (final Exception ignored) {
+                                            //}
+                                        }
+                                    }.start();
+
+                                    e.printStackTrace();
+                                }
+
                             }
 
 

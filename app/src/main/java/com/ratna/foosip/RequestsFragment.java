@@ -265,10 +265,16 @@ public class RequestsFragment extends Fragment {
 
         body.setId(savedParameter.getUID());
 
+        Log.d("uusswwee" , savedParameter.getUID());
+
         Map<String, String> map = new HashMap<>();
 
         map.put("Content-Type" , "application/json");
-        map.put("Authorization" , SavedParameter.getTOKEN(getContext()));
+        map.put("Authorization" , savedParameter.getTOKEN());
+
+
+        Log.d("bearer" , savedParameter.getTOKEN());
+
 
         Call<profileBean> call = cr.getProfile(body , map);
 
@@ -295,6 +301,8 @@ public class RequestsFragment extends Fragment {
                     DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
                     ImageLoader loader = ImageLoader.getInstance();
                     loader.displayImage("http://foosip.com/" + response.body().getData().getProfilePic() , mDisplayImage , options);
+
+                    Log.d("profile_pic" , response.body().getData().getProfilePic());
 
                 }
 
@@ -355,7 +363,7 @@ public class RequestsFragment extends Fragment {
                         .compressToBitmap(thumb_filePath);
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                thumb_bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
                 final byte[] thumb_byte = baos.toByteArray();
 
                 base_64 = Base64.encodeToString(thumb_byte, Base64.DEFAULT);
@@ -378,7 +386,7 @@ public class RequestsFragment extends Fragment {
                 Map<String, String> map = new HashMap<>();
 
                 map.put("Content-Type" , "application/json");
-                map.put("Authorization" , SavedParameter.getTOKEN(getContext()));
+                map.put("Authorization" , savedParameter.getTOKEN());
 
                 Call<profileBean> call = cr.updatePic(body , map);
 
@@ -480,7 +488,7 @@ public class RequestsFragment extends Fragment {
         txt_email.setText(savedParameter.getEMAIL(getContext()));
         txt_user_name.setText(savedParameter.getUSERNAME(getContext()));
 
-        Toast.makeText(getContext(),base_64,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(),base_64,Toast.LENGTH_SHORT).show();
 
         LinearLayout ll_submit = (LinearLayout) view.findViewById(R.id.ll_submit);
         ll_submit.setVisibility(View.GONE);
@@ -512,7 +520,7 @@ public class RequestsFragment extends Fragment {
                         Map<String, String> map = new HashMap<>();
 
                         map.put("Content-Type" , "application/json");
-                        map.put("Authorization" , SavedParameter.getTOKEN(getContext()));
+                        map.put("Authorization" , savedParameter.getTOKEN());
 
                         Call<profileBean> call = cr.updateProfile(body , map);
 

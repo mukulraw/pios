@@ -59,7 +59,7 @@ public class CancelQueue {
 
 
         Request request = new Request.Builder()
-                .header("Authorization", savedParameter.getTOKEN(activity))
+                .header("Authorization", savedParameter.getTOKEN())
                 .url(url)
                 .build();
 

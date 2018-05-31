@@ -132,7 +132,7 @@ public class Profile extends Activity {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .header("Authorization", savedParameter.getTOKEN(this))
+                .header("Authorization", savedParameter.getTOKEN())
                 .url(url)
                 .build();
 

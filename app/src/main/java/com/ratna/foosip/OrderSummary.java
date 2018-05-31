@@ -404,7 +404,7 @@ public class OrderSummary extends Activity {
 
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .header("Authorization", savedParameter.getTOKEN(this))
+                .header("Authorization", savedParameter.getTOKEN())
                 .url(url)
                 .post(body)
                 .build();

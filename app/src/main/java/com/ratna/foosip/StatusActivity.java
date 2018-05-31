@@ -96,7 +96,7 @@ public class StatusActivity extends AppCompatActivity {
                 Map<String, String> map = new HashMap<>();
 
                 map.put("Content-Type" , "application/json");
-                map.put("Authorization" , SavedParameter.getTOKEN(StatusActivity.this));
+                map.put("Authorization" , savedParameter.getTOKEN());
 
                 Call<profileBean> call = cr.updateStatus(body , map);
 

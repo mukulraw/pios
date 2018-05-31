@@ -1,6 +1,8 @@
 package com.ratna.foosip;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +31,15 @@ import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
 import java.util.Map;
 
+import SharedPreferences.SavedParameter;
+import app.Config;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+
 /**
  * Created by ratna on 4/6/2018.
  */
@@ -54,13 +65,15 @@ public class  HomeChat extends AppCompatActivity  {
 
     public static int CAMERA_PREVIEW_RESULT = 1;
 
-
+    SavedParameter savedParameter;
+    SharedPreferences fcmPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_home);
-
+        savedParameter = new SavedParameter(this);
+        fcmPref = getSharedPreferences(Config.SHARED_PREF , Context.MODE_PRIVATE);
         mAuth = FirebaseAuth.getInstance();
 
         mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
@@ -107,6 +120,31 @@ public class  HomeChat extends AppCompatActivity  {
 
 
 
+        final Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://foosip.com/")
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        final AllAPIs cr = retrofit.create(AllAPIs.class);
+
+
+
+        Call<Integer> call = cr.updateFirebase(savedParameter.getUID() , fcmPref.getString("token" , ""));
+
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
+            }
+        });
 
 
     }

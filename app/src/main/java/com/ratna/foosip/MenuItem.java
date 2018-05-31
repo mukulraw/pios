@@ -443,7 +443,7 @@ public class MenuItem extends Activity {
         JSONObject jsonObject = new JSONObject();
 
         try {
-            jsonObject.put("qr_code", savedParameter.getQrCode(this));
+            jsonObject.put("qr_code", savedParameter.getQrCode());
             Log.i("json_format", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -452,7 +452,7 @@ public class MenuItem extends Activity {
 
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .header("Authorization", savedParameter.getTOKEN(this))
+                .header("Authorization", savedParameter.getTOKEN())
                 .url(url)
                 .post(body)
                 .build();
@@ -494,7 +494,7 @@ public class MenuItem extends Activity {
 
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .header("Authorization", savedParameter.getTOKEN(this))
+                .header("Authorization", savedParameter.getTOKEN())
                 .url(url)
                 .post(body)
                 .build();

@@ -280,7 +280,7 @@ public class Home extends FragmentActivity {
 
 
         Request request = new Request.Builder()
-                .header("Authorization", savedParameter.getTOKEN(this))
+                .header("Authorization", savedParameter.getTOKEN())
                 .url(url)
                 .build();
 

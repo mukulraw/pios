@@ -125,9 +125,152 @@ public class ScanQR extends Activity implements ZXingScannerView.ResultHandler {
         savedParameter.setQrCode(rawResult.getText());
 
         CallApi();
+
     }
 
+
     private void CallApi() {
+
+        ConnectionDetector connectionDetector = new ConnectionDetector(this);
+        boolean isInternet = connectionDetector.isConnectingToInternet();
+
+        if (isInternet) {
+            String url = "http://foosip.com/usersapi/book_table";
+            new MenuItems(url).execute();
+        } else {
+            AlertClassRetry alert = new AlertClassRetry();
+            String t_alert = getResources().getString(R.string.error);
+            String m_alert = getResources().getString(R.string.no_internet);
+            alert.showAlert(ScanQR.this, t_alert, m_alert);
+        }
+    }
+
+
+    public class MenuItems extends AsyncTask<Void, Void, String> {
+
+        int response_code;
+        String url;
+        ProgressDialog progressDialog;
+
+        public MenuItems(String url) {
+            this.url = url;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = new ProgressDialog(ScanQR.this);
+            progressDialog.setMessage("Please Wait...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... arg0) {
+            String response = "";
+
+            try {
+                response = doPost(url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            //dismiss prgress dialogue
+            progressDialog.dismiss();
+            // Check server response
+            Log.i("result", result);
+
+//            Toast.makeText(SignIn.this, result.toString(), Toast.LENGTH_SHORT).show();
+
+
+            if (result != null && !result.equals("")) {
+
+
+                try {
+                    JSONObject object = new JSONObject(result);
+
+                    String message = object.getString("message");
+
+                    if (message.equals("first"))
+                    {
+
+                        String rid = object.getString("rid");
+                        savedParameter.setrId(rid);
+                        String toid = object.getString("temp_order_id");
+                        savedParameter.setTempOrderId(toid);
+
+                        userSession.setQR(true);
+                        Toast.makeText(ScanQR.this, result.toString(), Toast.LENGTH_SHORT).show();
+                        Intent mainIntent = new Intent(ScanQR.this, HomeChat.class);
+                        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(mainIntent);
+                        finish();
+
+                    }
+                    else if (message.equals("Table already in use"))
+                    {
+                        Toast.makeText(ScanQR.this , message , Toast.LENGTH_SHORT).show();
+                    }
+                    else if (message.equals("Invalid QRcode"))
+                    {
+                        Toast.makeText(ScanQR.this , message , Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(ScanQR.this , message , Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            } else {
+                AlertClassRetry alert = new AlertClassRetry();
+                String t_alert = getResources().getString(R.string.error);
+                String m_alert = getResources().getString(R.string.server_error);
+                alert.showAlert(ScanQR.this, t_alert, m_alert);
+            }
+        }
+    }
+
+
+    private String doPost(String url) throws IOException {
+        MediaType JSON
+                = MediaType.parse("application/json; charset=utf-8");
+        OkHttpClient client = new OkHttpClient();
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("qr_code", savedParameter.getQrCode());
+            Log.i("json_format", jsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+        Request request = new Request.Builder()
+                .header("Authorization", savedParameter.getTOKEN())
+                .url(url)
+                .post(body)
+                .build();
+
+
+        Response response = client.newCall(request).execute();
+        return response.body().string();
+    }
+
+
+
+
+    /*private void CallApi() {
 
         ConnectionDetector connectionDetector = new ConnectionDetector(this);
         boolean isInternet = connectionDetector.isConnectingToInternet();
@@ -150,8 +293,8 @@ public class ScanQR extends Activity implements ZXingScannerView.ResultHandler {
         JSONObject jsonObject = new JSONObject();
 
         try {
-            jsonObject.put("qr_code", savedParameter.getQrCode(this));
-            jsonObject.put("rid", savedParameter.getQrCode(this));
+            jsonObject.put("qr_code", savedParameter.getQrCode());
+            jsonObject.put("rid", savedParameter.getQrCode());
             Log.i("json_format", jsonObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -160,7 +303,7 @@ public class ScanQR extends Activity implements ZXingScannerView.ResultHandler {
 
         RequestBody body = RequestBody.create(JSON, jsonObject.toString());
         Request request = new Request.Builder()
-                .header("Authorization", savedParameter.getTOKEN(this))
+                .header("Authorization", savedParameter.getTOKEN())
                 .url(url)
                 .post(body)
                 .build();
@@ -229,7 +372,7 @@ public class ScanQR extends Activity implements ZXingScannerView.ResultHandler {
                 alert.showAlert(ScanQR.this, t_alert, m_alert);
             }
         }
-    }
+    }*/
 
     public class AlertClassRetry {
 

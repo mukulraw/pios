@@ -59,10 +59,7 @@ public class SavedParameter {
 
 
 
-    public static String getTOKEN(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
-        return prefs.getString(TOKEN, "");
-    }
+
 
     public static String getUID(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
@@ -129,7 +126,7 @@ public class SavedParameter {
         return prefs.getBoolean(MAIN_USER, false);
     }
 
-    public static String getQrCode(Context context) {
+    public String getQrCode() {
         SharedPreferences prefs = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
         return prefs.getString(QR_CODE, "");
     }
@@ -159,7 +156,10 @@ public class SavedParameter {
         editor.apply();
     }
 
-
+    public String getRID() {
+        SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
+        return sharedpreferences.getString("RID" , "");
+    }
 
     public void setTOKEN(String token) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);

@@ -128,7 +128,7 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
 
     private void lerMessagensFirebase() {
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
-        final GroupMessageAdapter firebaseAdapter = new GroupMessageAdapter(mFirebaseDatabaseReference.child("restaurant").child(savedParameter.getQrCode(getActivity())));
+        final GroupMessageAdapter firebaseAdapter = new GroupMessageAdapter(mFirebaseDatabaseReference.child("restaurant").child(savedParameter.getQrCode()));
         firebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -152,7 +152,7 @@ public class GroupFragment extends Fragment implements View.OnClickListener {
 
         if (!TextUtils.isEmpty(message)) {
 
-            String current_user_ref = "restaurant/" + savedParameter.getQrCode(getActivity());
+            String current_user_ref = "restaurant/" + savedParameter.getQrCode();
 
             DatabaseReference user_message_push = mFirebaseDatabaseReference.child("restaurant")
                     .push();

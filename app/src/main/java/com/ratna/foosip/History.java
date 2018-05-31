@@ -105,7 +105,7 @@ public class History extends Activity {
 
 
         Request request = new Request.Builder()
-                .header("Authorization", savedParameter.getTOKEN(this))
+                .header("Authorization", savedParameter.getTOKEN())
                 .url(url)
                 .build();
 
