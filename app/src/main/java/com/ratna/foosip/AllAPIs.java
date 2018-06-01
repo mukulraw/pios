@@ -11,6 +11,7 @@ import com.ratna.foosip.profilePOJO.statusRequestBean;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.HeaderMap;
@@ -84,5 +85,35 @@ public interface AllAPIs {
             @Part("fid") String fid
     );
 
+
+    @Multipart
+    @POST("api/get_messsages.php")
+    Call<List<chatBean>> getMessages(
+            @Part("group_id") String groupId
+    );
+
+    @Multipart
+    @POST("api/post_image.php")
+    Call<String> postImage(
+            @Part("user_id") String userid,
+            @Part("rid") String rid,
+            @Part("post_type") String postType,
+            @Part MultipartBody.Part file
+    );
+
+    @Multipart
+    @POST("api/post_text.php")
+    Call<String> postText(
+            @Part("user_id") String userid,
+            @Part("rid") String rid,
+            @Part("post_type") String postType,
+            @Part("message") String message
+    );
+
+    @Multipart
+    @POST("api/get_posts.php")
+    Call<List<postListbean>> getPosts(
+            @Part("rid") String rid
+    );
 
 }

@@ -85,6 +85,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             {
                 JSONObject dat = data2.getJSONObject("data");
 
+
                 Log.d("ddata" , dat.toString());
 
                 Intent registrationComplete = new Intent("commentData");
@@ -93,18 +94,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
 
             }
-            else if (type.equals("view"))
+            else if (type.equals("post"))
             {
 
                 JSONObject dat = data2.getJSONObject("data");
                 Log.d("view" , "called");
 
-                Intent registrationComplete = new Intent("view");
+                Intent registrationComplete = new Intent("post");
                 registrationComplete.putExtra("data", dat.toString());
 
                 LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
             }
-            else if (type.equals("gift"))
+            /*else if (type.equals("gift"))
             {
 
                 JSONObject dat = data2.getJSONObject("data");
@@ -147,7 +148,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 registrationComplete.putExtra("data", dat.toString());
 
                 LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
-            }
+            }*/
 
 
 

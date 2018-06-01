@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/fab_link"
+        android:icon="@drawable/write"
+        android:title="Share a Post" />
+
+    <item
+        android:id="@+id/fab_add"
+        android:icon="@drawable/click"
+        android:title="Share a Moment" />
+
+</menu>
