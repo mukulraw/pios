@@ -98,6 +98,7 @@ public interface AllAPIs {
             @Part("user_id") String userid,
             @Part("rid") String rid,
             @Part("post_type") String postType,
+            @Part("desc") String desc,
             @Part MultipartBody.Part file
     );
 

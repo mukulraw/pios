@@ -28,9 +28,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="click" />
-                            <entry key="sourceFile" value="C:\Users\mukul" />
+                            <entry key="outputName" value="ic_scanqr" />
+                            <entry key="sourceFile" value="C:\Users\lenovo\Desktop\scanqr.svg" />
                           </map>
                         </option>
                       </PersistentState>

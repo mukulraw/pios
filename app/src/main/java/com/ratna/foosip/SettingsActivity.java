@@ -108,7 +108,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         boolean flag = UserSession.getProfile(this);
         if (flag) {
-            Intent intent = new Intent(SettingsActivity.this, ScanQR.class);
+            Intent intent = new Intent(SettingsActivity.this, HomeChat.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
         }

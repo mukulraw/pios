@@ -5,8 +5,11 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -37,18 +40,34 @@ import okhttp3.Response;
 /**
  * Created by ratna on 10/7/2016.
  */
-public class ScanQR extends Activity implements ZXingScannerView.ResultHandler {
+public class ScanQR extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
     private ZXingScannerView mScannerView;
     SavedParameter savedParameter;
 
     UserSession userSession;
 
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scan_qr);
+
+        toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle("Scan QR");
+        toolbar.setNavigationIcon(R.drawable.back_white);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+
+        });
 
         mScannerView = new ZXingScannerView(this);
         savedParameter = new SavedParameter(this);
@@ -58,25 +77,18 @@ public class ScanQR extends Activity implements ZXingScannerView.ResultHandler {
 
         userSession = new UserSession(this);
 
-        boolean flag = userSession.getQR(this);
+        /*boolean flag = userSession.getQR(this);
         if (flag) {
             Intent intent = new Intent(ScanQR.this, HomeChat.class);
             startActivity(intent);
             finish();
-        }
+        }*/
 
         setView();
     }
 
     public void setView() {
 
-        LinearLayout ll_back = (LinearLayout) findViewById(R.id.ll_back);
-        ll_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
         LinearLayout ll_scan = (LinearLayout) findViewById(R.id.ll_scan);
         ll_scan.setOnClickListener(new View.OnClickListener() {
@@ -206,10 +218,13 @@ public class ScanQR extends Activity implements ZXingScannerView.ResultHandler {
                         savedParameter.setTempOrderId(toid);
 
                         userSession.setQR(true);
-                        Toast.makeText(ScanQR.this, result.toString(), Toast.LENGTH_SHORT).show();
+
+
+
+                        /*Toast.makeText(ScanQR.this, result.toString(), Toast.LENGTH_SHORT).show();
                         Intent mainIntent = new Intent(ScanQR.this, HomeChat.class);
                         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(mainIntent);
+                        startActivity(mainIntent);*/
                         finish();
 
                     }

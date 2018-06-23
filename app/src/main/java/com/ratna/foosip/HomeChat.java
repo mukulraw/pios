@@ -76,9 +76,9 @@ public class  HomeChat extends AppCompatActivity  {
         fcmPref = getSharedPreferences(Config.SHARED_PREF , Context.MODE_PRIVATE);
         mAuth = FirebaseAuth.getInstance();
 
-        mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.main_app_bar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Foosip Chat");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
 
@@ -106,17 +106,17 @@ public class  HomeChat extends AppCompatActivity  {
 
         mTabLayout = (TabLayout) findViewById(R.id.main_tabs);
 
-        mTabLayout.addTab(mTabLayout.newTab().setIcon(R.drawable.user_select));
+        mTabLayout.addTab(mTabLayout.newTab().setIcon(R.drawable.post_it_select));
         mTabLayout.addTab(mTabLayout.newTab().setIcon(R.drawable.tounge_select));
         mTabLayout.addTab(mTabLayout.newTab().setIcon(R.drawable.send_message_select));
-        mTabLayout.addTab(mTabLayout.newTab().setIcon(R.drawable.post_it_select));
+        mTabLayout.addTab(mTabLayout.newTab().setIcon(R.drawable.user_select));
 
         mTabLayout.setupWithViewPager(mViewPager);
 
-        mTabLayout.getTabAt(0).setIcon(R.drawable.user_select);
+        mTabLayout.getTabAt(0).setIcon(R.drawable.post_it_select);
         mTabLayout.getTabAt(1).setIcon(R.drawable.tounge_select);
         mTabLayout.getTabAt(2).setIcon(R.drawable.send_message_select);
-        mTabLayout.getTabAt(3).setIcon(R.drawable.post_it_select);
+        mTabLayout.getTabAt(3).setIcon(R.drawable.user_select);
 
 
 
@@ -206,25 +206,10 @@ public class  HomeChat extends AppCompatActivity  {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
 
-//        if(item.getItemId() == R.id.main_logout_btn){
-//
-//            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
-//
-//            FirebaseAuth.getInstance().signOut();
-//            sendToStart();
-//
-//        }
-//
-//        if(item.getItemId() == R.id.main_settings_btn){
-//
-//            Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
-//            startActivity(settingsIntent);
-//
-//        }
 
-        if(item.getItemId() == R.id.main_all_btn){
+        if(item.getItemId() == R.id.scan){
 
-            Intent settingsIntent = new Intent(HomeChat.this, AllUsersActivity.class);
+            Intent settingsIntent = new Intent(HomeChat.this, ScanQR.class);
             startActivity(settingsIntent);
 
         }

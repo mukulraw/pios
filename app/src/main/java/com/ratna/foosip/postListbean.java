@@ -19,10 +19,10 @@ public class postListbean {
     private String post;
     @SerializedName("total_likes")
     @Expose
-    private String totalLikes;
+    private Integer totalLikes;
     @SerializedName("total_comments")
     @Expose
-    private String totalComments;
+    private Integer totalComments;
     @SerializedName("post_type")
     @Expose
     private String postType;
@@ -37,8 +37,10 @@ public class postListbean {
     private String senderName;
     @SerializedName("user_id")
     @Expose
-    private String user_id;
-
+    private String userId;
+    @SerializedName("description")
+    @Expose
+    private String description;
 
     public String getId() {
         return id;
@@ -72,19 +74,19 @@ public class postListbean {
         this.post = post;
     }
 
-    public String getTotalLikes() {
+    public Integer getTotalLikes() {
         return totalLikes;
     }
 
-    public void setTotalLikes(String totalLikes) {
+    public void setTotalLikes(Integer totalLikes) {
         this.totalLikes = totalLikes;
     }
 
-    public String getTotalComments() {
+    public Integer getTotalComments() {
         return totalComments;
     }
 
-    public void setTotalComments(String totalComments) {
+    public void setTotalComments(Integer totalComments) {
         this.totalComments = totalComments;
     }
 
@@ -120,11 +122,19 @@ public class postListbean {
         this.senderName = senderName;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

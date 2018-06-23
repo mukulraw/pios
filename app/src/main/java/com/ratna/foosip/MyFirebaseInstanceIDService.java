@@ -40,10 +40,10 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
             edit.putString("token" , token);
             edit.apply();
 
-            Intent registrationComplete = new Intent(Config.REGISTRATION_COMPLETE);
+            /*Intent registrationComplete = new Intent(Config.REGISTRATION_COMPLETE);
             registrationComplete.putExtra("token", token);
             LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
-
+*/
         }catch (Exception e)
         {
             e.printStackTrace();

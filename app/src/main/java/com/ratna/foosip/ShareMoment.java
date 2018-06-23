@@ -19,8 +19,10 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ratna.foosip.profilePOJO.picRequestBean;
@@ -70,7 +72,10 @@ public class ShareMoment extends AppCompatActivity {
 
     SavedParameter savedParameter;
 
+    TextView text;
+    String type;
 
+    EditText title;
 
 
     @Override
@@ -80,16 +85,20 @@ public class ShareMoment extends AppCompatActivity {
 
         savedParameter = new SavedParameter(this);
 
+        type = getIntent().getStringExtra("type");
+
         toolbar = findViewById(R.id.toolbar3);
         post = findViewById(R.id.button2);
         image = findViewById(R.id.imageView15);
         progress = findViewById(R.id.progressBar6);
+        text = findViewById(R.id.textView56);
+        title = findViewById(R.id.editText8);
 
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitleTextColor(Color.BLACK);
-        toolbar.setTitle("Share a moment");
+        toolbar.setTitle("Share");
         toolbar.setNavigationIcon(R.drawable.back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +108,15 @@ public class ShareMoment extends AppCompatActivity {
 
         });
 
+
+        if (type.equals("moment"))
+        {
+            text.setText("I want to share a moment");
+        }
+        else
+        {
+            text.setText("I want to share a food pornography");
+        }
 
 
 
@@ -147,64 +165,75 @@ public class ShareMoment extends AppCompatActivity {
             public void onClick(View v) {
 
 
+                String desc = title.getText().toString();
 
-                if (resultUri!= null)
+
+                if (desc.length() > 0)
                 {
+                    if (resultUri!= null)
+                    {
 
-                    MultipartBody.Part body = null;
-                    String mCurrentPhotoPath = getPath(ShareMoment.this , resultUri);
+                        MultipartBody.Part body = null;
+                        String mCurrentPhotoPath = getPath(ShareMoment.this , resultUri);
 
-                    File file = new File(mCurrentPhotoPath);
-
-
-                    RequestBody reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-
-                    body = MultipartBody.Part.createFormData("image", file.getName(), reqFile);
+                        File file = new File(mCurrentPhotoPath);
 
 
-                    progress.setVisibility(View.VISIBLE);
+                        RequestBody reqFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
-                    final Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl("http://foosip.com/")
-                            .addConverterFactory(ScalarsConverterFactory.create())
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .build();
-
-                    final AllAPIs cr = retrofit.create(AllAPIs.class);
-
-                    Call<String> call = cr.postImage(savedParameter.getUID() , savedParameter.getQrCode() ,"moment" , body);
-
-                    call.enqueue(new Callback<String>() {
-                        @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
+                        body = MultipartBody.Part.createFormData("image", file.getName(), reqFile);
 
 
-                            if (response.body().equals("success"))
-                            {
-                                finish();
+                        progress.setVisibility(View.VISIBLE);
+
+                        final Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl("http://foosip.com/")
+                                .addConverterFactory(ScalarsConverterFactory.create())
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .build();
+
+                        final AllAPIs cr = retrofit.create(AllAPIs.class);
+
+                        Call<String> call = cr.postImage(savedParameter.getUID() , savedParameter.getRID() , type , desc , body);
+
+                        call.enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
+
+
+                                if (response.body().equals("success"))
+                                {
+                                    finish();
+                                }
+                                else
+                                {
+                                    Toast.makeText(ShareMoment.this , "Error uploading filr" , Toast.LENGTH_SHORT).show();
+                                }
+
+
+                                progress.setVisibility(View.GONE);
                             }
-                            else
-                            {
-                                Toast.makeText(ShareMoment.this , "Error uploading filr" , Toast.LENGTH_SHORT).show();
+
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+                                progress.setVisibility(View.GONE);
                             }
+                        });
 
 
-                            progress.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onFailure(Call<String> call, Throwable t) {
-                            progress.setVisibility(View.GONE);
-                        }
-                    });
 
 
+                    }
+                    else
+                    {
+                        Toast.makeText(ShareMoment.this , "Please add an image" , Toast.LENGTH_SHORT).show();
+                    }
 
 
                 }
                 else
                 {
-                    Toast.makeText(ShareMoment.this , "Please add an image" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShareMoment.this , "Please add a title" , Toast.LENGTH_SHORT).show();
                 }
 
 

@@ -3,8 +3,10 @@ package com.ratna.foosip;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,6 +37,7 @@ import java.util.regex.Pattern;
 
 import SharedPreferences.SavedParameter;
 import SharedPreferences.UserSession;
+import app.Config;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -54,12 +57,60 @@ public class SignIn extends Activity {
 
     private FirebaseAuth mAuth;
 
+    SharedPreferences fcmPref;
+    SharedPreferences.Editor fcmEdit;
     private DatabaseReference mUserDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_log_in);
+
+
+
+
+        fcmPref = getSharedPreferences(Config.SHARED_PREF , Context.MODE_PRIVATE);
+        fcmEdit = fcmPref.edit();
+
+        try {
+
+            String tok = FirebaseInstanceId.getInstance().getToken();
+
+            Log.d("token", tok);
+
+            fcmEdit.putString("token" , tok);
+
+            fcmEdit.apply();
+
+
+
+        } catch (Exception e) {
+
+            new Thread() {
+                @Override
+                public void run() {
+                    //If there are stories, add them to the table
+                    //try {
+                    // code runs in a thread
+                    //runOnUiThread(new Runnable() {
+                    //  @Override
+                    //public void run() {
+                    new MyFirebaseInstanceIDService().onTokenRefresh();
+
+
+
+
+
+
+                    //}
+                    //});
+                    //} catch (final Exception ignored) {
+                    //}
+                }
+            }.start();
+
+            e.printStackTrace();
+        }
 
         savedParameter = new SavedParameter(SignIn.this);
         userSession = new UserSession(this);

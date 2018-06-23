@@ -20,9 +20,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.ag.floatingactionmenu.OptionsFabLayout;
 import com.google.gson.Gson;
@@ -53,6 +55,10 @@ public class Wall extends Fragment {
     BroadcastReceiver commentReceiver;
     TextView newPosts;
 
+    TextView text;
+
+    Button scan;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,8 +73,12 @@ public class Wall extends Fragment {
         fab = view.findViewById(R.id.add);
         progress = view.findViewById(R.id.progressBar8);
 
+        text = view.findViewById(R.id.textView62);
+        scan = view.findViewById(R.id.button4);
 
         fab.setMiniFabsColors(
+                R.color.colorPrimary,
+                R.color.green_fab,
                 R.color.colorPrimary,
                 R.color.green_fab);
 
@@ -90,6 +100,15 @@ public class Wall extends Fragment {
         });
 
 
+        scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext() , ScanQR.class);
+                startActivity(intent);
+            }
+        });
+
+
         fab.setMiniFabSelectedListener(new OptionsFabLayout.OnMiniFabSelectedListener() {
             @Override
             public void onMiniFabSelected(MenuItem fabItem) {
@@ -99,7 +118,8 @@ public class Wall extends Fragment {
                     case R.id.fab_add:
 
 
-                        Intent intent = new Intent(getContext() , ShareMoment.class);
+                        Intent intent = new Intent(getContext() , SharePost.class);
+                        intent.putExtra("type" , "ask");
                         startActivity(intent);
                         fab.closeOptionsMenu();
 
@@ -107,10 +127,28 @@ public class Wall extends Fragment {
                         break;
                     case R.id.fab_link:
 
-                        Intent intent1 = new Intent(getContext() , SharePost.class);
+                        Intent intent1 = new Intent(getContext() , ShareMoment.class);
+                        intent1.putExtra("type" , "moment");
                         startActivity(intent1);
                         fab.closeOptionsMenu();
 
+                        break;
+                    case R.id.food:
+
+                        Intent intent2 = new Intent(getContext() , ShareMoment.class);
+                        intent2.putExtra("type" , "food");
+                        startActivity(intent2);
+                        fab.closeOptionsMenu();
+
+                        break;
+                    case R.id.give:
+
+                        Intent intent3 = new Intent(getContext() , SharePost.class);
+                        intent3.putExtra("type" , "give");
+                        startActivity(intent3);
+                        fab.closeOptionsMenu();
+
+                        break;
                     default:
                         break;
                 }
@@ -141,7 +179,7 @@ public class Wall extends Fragment {
                     postListbean item = gson.fromJson(json, postListbean.class);
 
                     try {
-                        if (!item.getUser_id().equals(savedParameter.getUID()))
+                        if (!item.getUserId().equals(savedParameter.getUID()))
                         {
                             adapter.addData(item);
 
@@ -198,6 +236,35 @@ public class Wall extends Fragment {
     public void onResume() {
         super.onResume();
 
+
+
+        if (savedParameter.getRID().length() > 0)
+        {
+            loadData();
+            grid.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
+
+            text.setVisibility(View.GONE);
+            scan.setVisibility(View.GONE);
+        }
+        else
+        {
+
+            grid.setVisibility(View.GONE);
+            fab.setVisibility(View.GONE);
+
+            text.setVisibility(View.VISIBLE);
+            scan.setVisibility(View.VISIBLE);
+
+        }
+
+
+
+    }
+
+
+    public void loadData()
+    {
         progress.setVisibility(View.VISIBLE);
 
         final Retrofit retrofit = new Retrofit.Builder()
@@ -208,7 +275,9 @@ public class Wall extends Fragment {
 
         final AllAPIs cr = retrofit.create(AllAPIs.class);
 
-        Call<List<postListbean>> call = cr.getPosts(savedParameter.getQrCode());
+        Log.d("qqrr" , savedParameter.getRID());
+
+        Call<List<postListbean>> call = cr.getPosts(savedParameter.getRID());
 
         call.enqueue(new Callback<List<postListbean>>() {
             @Override
@@ -219,6 +288,13 @@ public class Wall extends Fragment {
                     if (response.body().size() > 0)
                     {
                         adapter.setGridData(response.body());
+                        text.setVisibility(View.GONE);
+                        fab.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        fab.setVisibility(View.VISIBLE);
+                        text.setVisibility(View.VISIBLE);
                     }
 
                 }catch (Exception e)
@@ -236,6 +312,7 @@ public class Wall extends Fragment {
         });
 
     }
+
 
     public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         private final int mSpace;
@@ -302,7 +379,28 @@ public class Wall extends Fragment {
 
             holder.name.setText(item.getSenderName());
 
-            holder.type.setText(item.getPostType());
+            if (item.getPostType().equals("ask"))
+            {
+                holder.text.setText("Asked for a");
+                holder.type.setText("Recommendation");
+            }
+            else if (item.getPostType().equals("give"))
+            {
+                holder.text.setText("Shared a");
+                holder.type.setText("Recommendation");
+            }
+            else if (item.getPostType().equals("moment"))
+            {
+                holder.text.setText("Shared a");
+                holder.type.setText("Moment");
+            }
+            else if (item.getPostType().equals("food"))
+            {
+                holder.text.setText("Shared a");
+                holder.type.setText("Food Pornography");
+            }
+
+
 
             holder.likes.setText(item.getTotalLikes() + " likes");
             holder.comments.setText(item.getTotalComments() + " comments");
@@ -311,7 +409,8 @@ public class Wall extends Fragment {
             {
                 loader.displayImage("http://foosip.com/uploads/posts/" + item.getPost() , holder.image , options);
                 holder.image.setVisibility(View.VISIBLE);
-                holder.post.setVisibility(View.GONE);
+                holder.post.setVisibility(View.VISIBLE);
+                holder.post.setText(item.getDescription());
             }
             else
             {
@@ -334,7 +433,7 @@ public class Wall extends Fragment {
             TextView name , type , post;
             ImageView image;
 
-            TextView likes , comments;
+            TextView likes , comments , text;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -345,6 +444,7 @@ public class Wall extends Fragment {
                 type = itemView.findViewById(R.id.textView58);
                 post = itemView.findViewById(R.id.textView59);
                 image = itemView.findViewById(R.id.imageView7);
+                text = itemView.findViewById(R.id.textView57);
 
                 likes = itemView.findViewById(R.id.textView60);
                 comments = itemView.findViewById(R.id.textView61);

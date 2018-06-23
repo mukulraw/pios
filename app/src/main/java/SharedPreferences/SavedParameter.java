@@ -158,7 +158,7 @@ public class SavedParameter {
 
     public String getRID() {
         SharedPreferences sharedpreferences = context.getSharedPreferences(MyPREFERENCES_SAVE, Context.MODE_PRIVATE);
-        return sharedpreferences.getString("RID" , "");
+        return sharedpreferences.getString(RID , "");
     }
 
     public void setTOKEN(String token) {

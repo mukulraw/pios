@@ -20,7 +20,7 @@ class SectionsPagerAdapter extends FragmentPagerAdapter{
 
         switch(position) {
             case 0:
-                RequestsFragment requestsFragment = new RequestsFragment();
+                Wall requestsFragment = new Wall();
                 return requestsFragment;
 
             case 1:
@@ -32,7 +32,7 @@ class SectionsPagerAdapter extends FragmentPagerAdapter{
                 return friendsFragment;
 
             case 3:
-                Wall groupFragment = new Wall();
+                RequestsFragment groupFragment = new RequestsFragment();
                 return groupFragment;
 
             default:

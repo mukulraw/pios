@@ -3,12 +3,23 @@
 
     <item
         android:id="@+id/fab_link"
-        android:icon="@drawable/write"
-        android:title="Share a Post" />
+        android:icon="@drawable/click"
+        android:title="Share your Moment" />
+
+    <item
+        android:id="@+id/food"
+        android:icon="@drawable/ic_dinner"
+        android:title="Share Food Pornography" />
 
     <item
         android:id="@+id/fab_add"
-        android:icon="@drawable/click"
-        android:title="Share a Moment" />
+        android:icon="@drawable/ic_ask"
+        android:title="Ask for Recommendation" />
+
+    <item
+        android:id="@+id/give"
+        android:icon="@drawable/ic_like2"
+        android:title="Give Recommendation" />
+
 
 </menu>

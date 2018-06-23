@@ -24,6 +24,9 @@ import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import Utils.NotificationUtils;
 import app.Config;
 
@@ -32,9 +35,8 @@ import app.Config;
  */
 public class SplashScreen extends AppCompatActivity {
 
-    public static final int MY_PERMISSIONS_REQUEST_WRITE_CALENDAR = 123;
-    private static final String TAG = Home.class.getSimpleName();
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    String[] PERMISSIONS = {android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION , Manifest.permission.CAMERA , Manifest.permission.RECEIVE_SMS , Manifest.permission.WRITE_EXTERNAL_STORAGE , Manifest.permission.READ_PHONE_STATE};
+    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
     SharedPreferences fcmPref;
     SharedPreferences.Editor fcmEdit;
@@ -43,53 +45,53 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
-       //checkPermission();
+        //checkPermission();
 
-        fcmPref = getSharedPreferences(Config.SHARED_PREF , Context.MODE_PRIVATE);
+        /*fcmPref = getSharedPreferences(Config.SHARED_PREF, Context.MODE_PRIVATE);
         fcmEdit = fcmPref.edit();
 
-       if (checkPermission())
-       {
+        if (checkPermission()) {
 
 
+            try {
+
+                String tok = FirebaseInstanceId.getInstance().getToken();
+
+                Log.d("token", tok);
+
+                fcmEdit.putString("token", tok);
+
+                fcmEdit.apply();
+
+                displayFirebaseRegId();
+
+            } catch (Exception e) {
+
+                new Thread() {
+                    @Override
+                    public void run() {
+                        //If there are stories, add them to the table
+                        //try {
+                        // code runs in a thread
+                        //runOnUiThread(new Runnable() {
+                        //  @Override
+                        //public void run() {
+                        new MyFirebaseInstanceIDService().onTokenRefresh();
+
+                        displayFirebaseRegId();
 
 
-           try {
+                        //}
+                        //});
+                        //} catch (final Exception ignored) {
+                        //}
+                    }
+                }.start();
 
-               String tok = FirebaseInstanceId.getInstance().getToken();
+                e.printStackTrace();
+            }
 
-               Log.d("token", tok);
-
-               fcmEdit.putString("token" , tok);
-
-               fcmEdit.apply();
-
-               displayFirebaseRegId();
-
-           } catch (Exception e) {
-
-               new Thread() {
-                   @Override
-                   public void run() {
-                       //If there are stories, add them to the table
-                       //try {
-                       // code runs in a thread
-                       //runOnUiThread(new Runnable() {
-                       //  @Override
-                       //public void run() {
-                       new MyFirebaseInstanceIDService().onTokenRefresh();
-                       //}
-                       //});
-                       //} catch (final Exception ignored) {
-                       //}
-                   }
-               }.start();
-
-               e.printStackTrace();
-           }
-
-       }
-
+        }
 
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
@@ -97,7 +99,7 @@ public class SplashScreen extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
 
 
-                Log.d("intent" , "1");
+                Log.d("intent", "1");
 
                 // checking for type intent filter
                 if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
@@ -105,9 +107,9 @@ public class SplashScreen extends AppCompatActivity {
                     // now subscribe to `global` topic to receive app wide notifications
                     //FirebaseMessaging.getInstance().subscribeToTopic(app.Config.TOPIC_GLOBAL);
 
-                    Log.d("intent" , "2");
-
                     displayFirebaseRegId();
+                    Log.d("intent", "2");
+
 
                 }
 
@@ -119,6 +121,17 @@ public class SplashScreen extends AppCompatActivity {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(Config.REGISTRATION_COMPLETE));
+*/
+
+
+        if(hasPermissions(this , PERMISSIONS))
+        {
+            startApp();
+        }
+        else
+        {
+            ActivityCompat.requestPermissions(this , PERMISSIONS , REQUEST_CODE_ASK_PERMISSIONS);
+        }
 
 
     }
@@ -127,20 +140,20 @@ public class SplashScreen extends AppCompatActivity {
     // and displays on the screen
     private void displayFirebaseRegId() {
         //SharedPreferences pref = getApplicationContext().getSharedPreferences(app.Config.SHARED_PREF, 0);
-        String regId = fcmPref.getString("token", null);
+        //String regId = fcmPref.getString("token", null);
 
-        Log.e(TAG, "Firebase reg id: " + regId);
+        //Log.e(TAG, "Firebase reg id: " + regId);
 
-        if (!TextUtils.isEmpty(regId)){
+        //if (!TextUtils.isEmpty(regId)){
 
-                Intent intent = new Intent(SplashScreen.this,SignIn.class);
-                startActivity(intent);
-                finish();
+        Intent intent = new Intent(SplashScreen.this, SignIn.class);
+        startActivity(intent);
+        finish();
 //            Toast.makeText(this,regId.toString(),Toast.LENGTH_SHORT).show();
-        }
+        /*}
         else{
             Toast.makeText(this,"reg id not recieved yet!!",Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
     }
 
@@ -155,107 +168,83 @@ public class SplashScreen extends AppCompatActivity {
         // by doing this, the activity will be notified each time a new message arrives
 
         // clear the notification area when the app is opened
-        NotificationUtils.clearNotifications(getApplicationContext());
+        //NotificationUtils.clearNotifications(getApplicationContext());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        //LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
     }
 
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    public boolean checkPermission()
+    public void startApp()
     {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if(currentAPIVersion>= Build.VERSION_CODES.M)
-        {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) + ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) + ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) + ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)  != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) this, Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale((Activity) this, Manifest.permission.READ_PHONE_STATE) ||
-                        ActivityCompat.shouldShowRequestPermissionRationale((Activity) this, Manifest.permission.RECEIVE_SMS) || ActivityCompat.shouldShowRequestPermissionRationale((Activity) this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-                    alertBuilder.setCancelable(true);
-                    alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("Write permission is necessary to write event!!!");
-                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(SplashScreen.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE, Manifest.permission.RECEIVE_SMS , Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_CALENDAR);
-                        }
-                    });
-                    AlertDialog alert = alertBuilder.create();
-                    alert.show();
-                } else {
-                    ActivityCompat.requestPermissions((Activity) this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_PHONE_STATE, Manifest.permission.RECEIVE_SMS , Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_CALENDAR);
-                }
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return true;
-        }
+        Intent intent = new Intent(SplashScreen.this, SignIn.class);
+        startActivity(intent);
+        finish();
     }
+
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_WRITE_CALENDAR:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-                        @Override
-                        public void onReceive(Context context, Intent intent) {
 
-                            // checking for type intent filter
-                            if (intent.getAction().equals(app.Config.REGISTRATION_COMPLETE)) {
-                                // gcm successfully registered
-                                // now subscribe to `global` topic to receive app wide notifications
-                                //FirebaseMessaging.getInstance().subscribeToTopic(app.Config.TOPIC_GLOBAL);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-                                try {
+        if (requestCode == REQUEST_CODE_ASK_PERMISSIONS)
+        {
+            if (
+                    ActivityCompat.checkSelfPermission(getApplicationContext() , Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getApplicationContext() , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getApplicationContext() , Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getApplicationContext() , Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getApplicationContext() , Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getApplicationContext() , Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
 
-                                    String tok = FirebaseInstanceId.getInstance().getToken();
+                    )
+            {
 
-                                    Log.d("token", tok);
+                startApp();
 
-                                    fcmEdit.putString("token" , tok);
+            }
+            else
+            {
+                if (
+                        ActivityCompat.shouldShowRequestPermissionRationale(this , Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                        ActivityCompat.shouldShowRequestPermissionRationale(this , Manifest.permission.ACCESS_FINE_LOCATION) ||
+                        ActivityCompat.shouldShowRequestPermissionRationale(this , Manifest.permission.CAMERA) ||
+                        ActivityCompat.shouldShowRequestPermissionRationale(this , Manifest.permission.RECEIVE_SMS) ||
+                        ActivityCompat.shouldShowRequestPermissionRationale(this , Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
+                        ActivityCompat.shouldShowRequestPermissionRationale(this , Manifest.permission.READ_PHONE_STATE)
+                        ) {
 
-                                    fcmEdit.apply();
+                    Toast.makeText(getApplicationContext() , "Permissions are required for this app" , Toast.LENGTH_SHORT).show();
+                    finish();
 
-                                    displayFirebaseRegId();
-
-                                } catch (Exception e) {
-
-                                    new Thread() {
-                                        @Override
-                                        public void run() {
-                                            //If there are stories, add them to the table
-                                            //try {
-                                            // code runs in a thread
-                                            //runOnUiThread(new Runnable() {
-                                            //  @Override
-                                            //public void run() {
-                                            new MyFirebaseInstanceIDService().onTokenRefresh();
-                                            //}
-                                            //});
-                                            //} catch (final Exception ignored) {
-                                            //}
-                                        }
-                                    }.start();
-
-                                    e.printStackTrace();
-                                }
-
-                            }
-
-
-                        }
-                    };
-                } else {
-//code for deny
                 }
-                break;
+                //permission is denied (and never ask again is  checked)
+                //shouldShowRequestPermissionRationale will return false
+                else {
+                    Toast.makeText(this, "Go to settings and enable permissions", Toast.LENGTH_LONG)
+                            .show();
+                    finish();
+                    //                            //proceed with logic by disabling the related features or quit the app.
+                }
+            }
+
         }
+
     }
 }
 

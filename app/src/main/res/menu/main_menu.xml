@@ -3,12 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/main_settings_btn"
-        android:title="Account Settings" />
-    <item
-        android:id="@+id/main_all_btn"
-        android:title="All Users" />
-    <item
-        android:id="@+id/main_logout_btn"
-        android:title="LogOut" />
+        android:id="@+id/scan"
+        android:title="Scan Code"
+        android:icon="@drawable/ic_scanqr"
+        app:showAsAction="always"/>
+
+
 </menu>

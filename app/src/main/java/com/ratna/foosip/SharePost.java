@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -28,39 +29,47 @@ public class SharePost extends AppCompatActivity {
 
     Toolbar toolbar;
     Button post;
-    Spinner spinner;
+
     EditText comment;
     ProgressBar progress;
-    List<String> list;
+
     String type;
     SavedParameter savedParameter;
 
+    TextView text;
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_post);
 
+        type = getIntent().getStringExtra("type");
+
         savedParameter = new SavedParameter(this);
 
-        list = new ArrayList<>();
 
-        list.add("Recommendation");
-        list.add("Feeling");
-        list.add("Thought");
-        list.add("Type1");
 
 
         toolbar = findViewById(R.id.toolbar4);
         post = findViewById(R.id.button3);
-        spinner = findViewById(R.id.spinner);
+
         comment = findViewById(R.id.editText7);
         progress = findViewById(R.id.progressBar7);
+        text = findViewById(R.id.textView56);
 
+
+        if (type.equals("ask"))
+        {
+            text.setText("I want to ask for a Recommendation");
+        }
+        else
+        {
+            text.setText("I want to share a Recommendation");
+        }
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitleTextColor(Color.BLACK);
-        toolbar.setTitle("Share a post");
+        toolbar.setTitle("Share");
         toolbar.setNavigationIcon(R.drawable.back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,25 +80,8 @@ public class SharePost extends AppCompatActivity {
         });
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this ,
-                android.R.layout.simple_list_item_1 , list);
-
-        spinner.setAdapter(adapter);
 
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                type = list.get(position);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
 
         post.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +104,7 @@ public class SharePost extends AppCompatActivity {
 
                     final AllAPIs cr = retrofit.create(AllAPIs.class);
 
-                    Call<String> call = cr.postText(savedParameter.getUID() , savedParameter.getQrCode() , type , c);
+                    Call<String> call = cr.postText(savedParameter.getUID() , savedParameter.getRID() , type , c);
 
                     call.enqueue(new Callback<String>() {
                         @Override

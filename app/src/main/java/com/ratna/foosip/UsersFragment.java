@@ -88,7 +88,7 @@ public class UsersFragment extends Fragment {
 
         allUsersRequestBean body = new allUsersRequestBean();
 
-        body.setRid(savedParameter.getQrCode());
+        body.setRid(savedParameter.getRID());
 
         Map<String, String> map = new HashMap<>();
 
@@ -101,8 +101,14 @@ public class UsersFragment extends Fragment {
             @Override
             public void onResponse(Call<allUsersBean> call, Response<allUsersBean> response) {
 
+                try {
 
-                adapter.setGridData(response.body().getData());
+                    adapter.setGridData(response.body().getData());
+
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
 
 
                 progress.setVisibility(View.GONE);
